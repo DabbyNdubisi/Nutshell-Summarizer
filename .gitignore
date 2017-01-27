@@ -1,0 +1,18 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# dependencies
+Web-Client/node_modules
+Web-Server/node_modules
+
+# testing
+Web-Client/coverage
+
+# production
+Web-Client/build
+
+# misc
+.DS_Store
+Web-Client/.DS_Store
+Web-Server/.DS_Store
+Web-Client/.env
+Web-Client/npm-debug.log

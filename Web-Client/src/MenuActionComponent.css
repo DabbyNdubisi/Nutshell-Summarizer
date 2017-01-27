@@ -1,0 +1,32 @@
+.MenuAction {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    border-radius: 5px;
+    text-align: center;
+    overflow: hidden;
+}
+
+.Loading {
+    background-color: #aaa;
+    cursor: default;
+}
+
+.Idle {
+    background-color: #222;
+    cursor: pointer;
+}
+
+.MenuAction-text {
+    padding: 12.5% 0;
+    margin: 0;
+    color: #fff;
+    height: 75%;
+
+}
+
+.MenuAction-spinner {
+    height: 100%;
+    padding: 0% 0%;
+}

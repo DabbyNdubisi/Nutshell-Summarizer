@@ -1,0 +1,17 @@
+@import url('./fonts.css');
+
+html,
+body {
+    height: 100% !important;
+    background-color: #222;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+#root {
+    height: 100% !important;
+}

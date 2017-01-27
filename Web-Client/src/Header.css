@@ -1,0 +1,16 @@
+.Header-Nav {
+    float: left;
+    height: 100%;
+    width: 100%;
+    display: inline;
+}
+
+.Header-title {
+    font-family: "Lato", "Arimo", "Fontdiner Swanky", "Germania One", "Poller One", "Georgia", "Helvetica Neue", Arial, sans-serif;
+    font-size: 1.4em;
+}
+
+.Header-subtext {
+    font-family: "Lato", "Arimo", "Fontdiner Swanky", "Germania One", "Poller One", "Georgia", "Helvetica Neue", Arial, sans-serif;
+    font-size: 0.8em;
+}

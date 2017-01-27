@@ -1,0 +1,49 @@
+.App {
+  text-align: center;
+  height: 100%;
+  width: 100%;
+  display: block;
+}
+
+.App-Header {
+    text-align: center;
+    background-color: #222;
+    height: 80px;
+    width: 100%;
+    color: white;
+    position: fixed;
+}
+
+.App-Content {
+    background-color: inherit;
+    height: 92%;
+    padding-top: 80px;
+    margin: 0%;
+    border: 0%;
+}
+
+.App-Content-Left, .App-Content-Right {
+    height: 98%;
+    width: 48.5%;
+    padding: 1%;
+    margin: 0%;
+    border: 0%;
+}
+
+.App-Content-Left {
+    float: left;
+    padding-right: 0.5%;
+}
+
+.App-Content-Right {
+    float: left;
+    padding-left: 0.5%;
+}
+
+.App-MenuAction {
+    position: absolute;
+    left: 2%;
+    top: 90%;
+    width: 20%;
+    height: 8%;
+}
