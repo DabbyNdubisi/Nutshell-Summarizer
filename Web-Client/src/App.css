@@ -47,3 +47,11 @@
     width: 20%;
     height: 8%;
 }
+
+.App-Settings {
+    height: 50%;
+    width: 30%;
+    position: absolute;
+    top: 25%;
+    left:35.5%;
+}

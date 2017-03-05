@@ -30,7 +30,7 @@ class Summarizer(object):
         return new_sents
 
     """ Miscellaneous """
-    def __compare(self, x, y):
+    def compare(self, x, y):
         if(x[1] > y[1]):
             return -1
         elif x[1] < y[1]:

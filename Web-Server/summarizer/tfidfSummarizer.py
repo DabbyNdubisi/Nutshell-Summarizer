@@ -6,16 +6,14 @@ import math
 import nltk
 import string
 from collections import defaultdict
-from nltk.stem.snowball import SnowballStemmer
-from nltk.corpus import stopwords
+from Summarizer import Summarizer
 
-class tfidfSummarizer:
-    def __init__(self, threshold):
+class tfidfSummarizer(Summarizer):
+    def __init__(self, threshold=0.8):
+        super(self.__class__, self).__init__()
         self.sents_vects = []
         self.inverse_sents_frequency_map = defaultdict(set)
         self.summary_threshold = threshold
-        self.stemmer = SnowballStemmer("english")
-        self.stopwords = set([ w.encode('ascii') for w in stopwords.words("english") ])
 
     def summarize(self, text):
         text = " ".join(text.split("\n"))
@@ -28,7 +26,7 @@ class tfidfSummarizer:
         sents_scores = [ (i, sents_scores[i]) for i in range(len(sents_scores)) ]
 
         # create summarized text
-        sents_scores.sort(self.__compare)
+        sents_scores.sort(self.compare)
         num_sents_threshold = int((1 - self.summary_threshold) * len(sents_scores))
         sents_idx_for_summary = []
         for i in range(len(sents_scores)):
@@ -40,9 +38,9 @@ class tfidfSummarizer:
         # sort summary index to create some form of cohesion
         sents_idx_for_summary.sort()
 
-        print " ".join(original_sents[i] for i in sents_idx_for_summary)
-        print("Original len: %d" %(len(original_sents)))
-        print("Summary len: %d" %(len(sents_idx_for_summary)))
+        return " ".join(original_sents[i] for i in sents_idx_for_summary)
+        # print("Original len: %d" %(len(original_sents)))
+        # print("Summary len: %d" %(len(sents_idx_for_summary)))
 
     """ sentence vectors scoring """
     def score_sents_vects(self):
@@ -78,8 +76,8 @@ class tfidfSummarizer:
         #     sents_scores[i] += len([ w for w in self.sents_vects[i] if w in key_words ])/len(self.sents_vects[i])
 
         # handle overfitting
-        # for i in range(len(self.sents_vects)):
-        #     sents_scores[i] *= avg_sent_length / len(self.sents_vects[i])
+        for i in range(len(self.sents_vects)):
+            sents_scores[i] *= len(self.sents_vects[i]) / avg_sent_length
 
         return sents_scores
 
@@ -125,29 +123,4 @@ class tfidfSummarizer:
         count = len(self.sents_vects)
         for vector in self.sents_vects:
             for term in vector:
-                vector[term] *= math.log10(count/len(self.inverse_sents_frequency_map[term]))
-
-    """ Text Processing """
-    def preprocess_sents(self, sentences):
-        # Case folding step. Put all words in lower case and remove punctuations
-        processed_sentences = [ sent.lower().translate(None, string.punctuation) for sent in sentences ]
-        processed_sentences = self.stop_and_stem_process(processed_sentences)
-        return [ sent for sent in processed_sentences if len(sent) > 0]
-
-    def stop_and_stem_process(self, sentences):
-        new_sents = []
-        for sent in sentences:
-            new_sents.append([ self.stemmer.stem(word).encode('ascii') for word in sent.split() if not word in self.stopwords ])
-        return new_sents
-
-    """ Miscellaneous """
-    def __compare(self, x, y):
-        if(x[1] > y[1]):
-            return -1
-        elif x[1] < y[1]:
-            return 1
-        else:
-            return 0
-
-summarizer = tfidfSummarizer(0.8)
-summarizer.summarize(open("./text.txt", 'r').read())
+                vector[term] *= (1 + math.log10(count/len(self.inverse_sents_frequency_map[term])))

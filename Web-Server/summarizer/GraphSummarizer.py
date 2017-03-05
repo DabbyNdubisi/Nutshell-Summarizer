@@ -9,9 +9,9 @@ from Graph import Graph
 from Graph import GraphNode
 
 class graphSummarizer(Summarizer):
-    def __init__(self, damping=0.85, compression=0.8):
+    def __init__(self, compression=0.9):
         super(self.__class__, self).__init__()
-        self.damping = damping
+        self.damping = 0.85
         self.compression = compression
 
     def summarize(self, text):
@@ -26,17 +26,15 @@ class graphSummarizer(Summarizer):
 
         # make summary
         ranked_sents = sorted(graph.vertices_scores, key=graph.vertices_scores.get, reverse=True)
-        summ_len = int(len(original_sents) * (1 - self.compression))
+        summ_len = max(int(len(original_sents) * (1 - self.compression)), 1)
         summIdx = []
         for i in range(min(summ_len, len(ranked_sents))):
             summIdx.append(ranked_sents[i].data)
 
         summary = [original_sents[idx] for idx in sorted(summIdx)]
-        print " ".join(summary)
-        print("summary length: %d" %(len(summary)))
-        print("original length: %d" %(len(original_sents)))
-
-
+        return " ".join(summary)
+        # print("summary length: %d" %(len(summary)))
+        # print("original length: %d" %(len(original_sents)))
 
     " Text Transormation stage functions"
     def create_sents_graph(self, sents):
@@ -76,5 +74,5 @@ class graphSummarizer(Summarizer):
                 graph.set_vertex_score(v_i, (1 - self.damping) + (self.damping * total))
                 has_converged = has_converged and abs(graph.get_vertex_score(v_i) - old_score) < convergence_const
 
-summarizer = graphSummarizer()
-summarizer.summarize(open("./text.txt", 'r').read())
+#summarizer = graphSummarizer()
+#summarizer.summarize(open("./text.txt", 'r').read())

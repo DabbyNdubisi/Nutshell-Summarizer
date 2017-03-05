@@ -1,0 +1,35 @@
+.Settings-View {
+    padding: 5%;
+    background-color: white;
+    width: 90%;
+    height: 90%;
+    border-radius: 10px;
+}
+
+h4 {
+    margin: 0;
+}
+
+table {
+    height: 80%;
+    width: 100%;
+}
+
+tr {
+    margin: 10%
+}
+
+button {
+    width: 50%;
+    height: 10%;
+    border: 0;
+    border-radius: 5px;
+    background-color: gray;
+    -webkit-appearance: none;
+    color: white;
+    font-size: 1.0em;
+}
+
+button:hover {
+    background-color: #383;
+}
