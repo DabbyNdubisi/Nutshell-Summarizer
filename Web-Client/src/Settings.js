@@ -7,11 +7,15 @@ class Settings extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            method: methods[0],
-            compressionFactor: 0.8
+        var currentMethod, currentCompressionFactor;
+        if(this.props.currentSettings){
+            currentMethod = this.props.currentSettings.method;
+            currentCompressionFactor = this.props.currentSettings.compressionFactor;
         }
-
+        this.state = {
+            method: (currentMethod ? currentMethod : methods[0]),
+            compressionFactor: (currentCompressionFactor ? currentCompressionFactor : 0.8)
+        }
         this.settingsUpdated = this.settingsUpdated.bind(this);
         this.closeSettings = this.closeSettings.bind(this);
     }
@@ -19,9 +23,9 @@ class Settings extends Component {
     settingsUpdated(event) {
         var toUpdate = this.state;
 
-        if(event.target.nodeName == "SELECT") {
+        if(event.target.nodeName === "SELECT") {
             toUpdate.method = event.target.value;
-        } else if(event.target.nodeName == "INPUT") {
+        } else if(event.target.nodeName === "INPUT") {
             switch (event.target.id) {
                 case "compression-scale":
                     toUpdate.compressionFactor = event.target.value / 100.0
@@ -47,7 +51,7 @@ class Settings extends Component {
                         <tr>
                             <td><span>Summary Method</span></td>
                             <td>
-                                <select onChange={ this.settingsUpdated }>
+                                <select onChange={ this.settingsUpdated } value={ this.state.method }>
                                     {
                                         methods.map((method) => {
                                             return <option key={method} value={method}>{method}</option>
@@ -59,7 +63,10 @@ class Settings extends Component {
                         <tr>
                             <td><span>Compression Scale</span></td>
                             <td>
-                                <input id="compression-scale" type="range" onChange={ this.settingsUpdated }/>
+                                <input id="compression-scale" type="range" min="0" max="100" value={this.state.compressionFactor * 100} onChange={ this.settingsUpdated }/>
+                            </td>
+                            <td id="compression-scale-text">
+                                <span>{this.state.compressionFactor}</span>
                             </td>
                         </tr>
                     </tbody>

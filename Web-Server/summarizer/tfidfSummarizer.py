@@ -27,10 +27,10 @@ class tfidfSummarizer(Summarizer):
 
         # create summarized text
         sents_scores.sort(self.compare)
-        num_sents_threshold = int((1 - self.summary_threshold) * len(sents_scores))
+        num_sents_threshold = max(1, int((1 - self.summary_threshold) * len(sents_scores)))
         sents_idx_for_summary = []
         for i in range(len(sents_scores)):
-            if len(sents_idx_for_summary) <= num_sents_threshold:
+            if len(sents_idx_for_summary) < num_sents_threshold:
                 sents_idx_for_summary.append(sents_scores[i][0])
             else:
                 break

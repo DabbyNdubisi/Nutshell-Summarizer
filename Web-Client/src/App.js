@@ -7,6 +7,7 @@ import './App.css';
 
 var utility = require('./Utility');
 var $ = require('jquery');
+var ROOT_URL = "http://localhost:3001/";
 
 class App extends Component {
     constructor(props) {
@@ -16,11 +17,15 @@ class App extends Component {
             summarizedText: "",
             isSummarizing: false,
             isSettingsVisible: false,
-            settings: {}
+            settings: {
+                method: "Graph",
+                compressionFactor: 0.8
+            }
         }
 
         this.rawTextChanged = this.rawTextChanged.bind(this);
         this.summarize = this.summarize.bind(this);
+        this.uploadFile = this.uploadFile.bind(this);
         this.showSettings = this.showSettings.bind(this);
         this.hideSettings = this.hideSettings.bind(this);
         this.updateSettings = this.updateSettings.bind(this);
@@ -30,7 +35,7 @@ class App extends Component {
         let isSummarizing = this.state.isSummarizing;
         let settingsView = this.state.isSettingsVisible ?
             <div className="App-Settings" ref={ (value) => { this.settingsView = value } }>
-                <Settings onSettingsUpdated={ this.updateSettings } onSettingsClosed={ this.hideSettings }/>
+                <Settings currentSettings={ this.state.settings } onSettingsUpdated={ this.updateSettings } onSettingsClosed={ this.hideSettings }/>
             </div> : null;
         if (this.settingsView) {
             this.settingsView.style.display = "block"
@@ -45,12 +50,24 @@ class App extends Component {
                 <div className="App-Content">
                     <div className="App-Content-Left">
                         <TextComponent editable={isSummarizing ? false : true } placeholder={"Enter a text to summarize here"} value={this.state.rawText} onChange={this.rawTextChanged} />
-                        { this.shouldShowActionMenu() ?
-                            <div className="App-MenuAction">
-                                <MenuActionComponent onClick={ isSummarizing ? null : this.summarize } loading={ isSummarizing } actionText="Summarize" />
-                            </div> :
-                            null
-                        }
+                        <div className="App-MenuActions">
+                            { this.shouldShowSummarizeAction() ?
+                                <div className="App-Menu-Action">
+                                    <MenuActionComponent onClick={ isSummarizing ? null : this.summarize } loading={ isSummarizing } actionText="Summarize" />
+                                </div> : null
+                            }
+                            { !this.shouldShowSummarizeAction() ?
+                                <div className="App-Menu-Action">
+                                    <input type="file" name="file" accept=".txt" onChange={ (event) => { this.setState({ files: event.target.files }) } }/>
+                                    { (this.state.files && this.state.files.length > 0) ?
+                                        <div className="App-Menu-Action">
+                                            <MenuActionComponent onClick={ isSummarizing ? null : this.uploadFile } loading={ isSummarizing } actionText="Summarize File" />
+                                        </div> : null
+                                    }
+                                </div> : null
+                            }
+
+                        </div>
                     </div>
                     <div className="App-Content-Right">
                         <TextComponent editable={false} placeholder={"Your summary shows up here"} value={this.state.summarizedText} />
@@ -65,7 +82,7 @@ class App extends Component {
         this.setState({ rawText: text });
     }
 
-    shouldShowActionMenu() {
+    shouldShowSummarizeAction() {
         return this.state.rawText.length > 0;
     }
 
@@ -75,12 +92,37 @@ class App extends Component {
         let weakThis = this;
         return $.ajax({
             type: 'POST',
-            url: 'http://localhost:3001/',
+            url: ROOT_URL,
             data: {
                 toSummarize: text,
                 method: this.state.settings.method,
                 compressionFactor: this.state.settings.compressionFactor
             },
+        })
+        .done(function(data) {
+            weakThis.setState({ isSummarizing: false, summarizedText: data.summary });
+        })
+        .fail(function(error) {
+            console.log(JSON.stringify(error));
+            weakThis.setState({ isSummarizing: false, summarizedText: '' });
+        })
+    }
+
+    uploadFile() {
+        let file = this.state.files[0];
+        this.setState({ isSummarizing: true });
+        let weakThis = this;
+        let data = new FormData();
+        data.append("file", file);
+        data.append("method", this.state.settings.method);
+        data.append("compressionFactor", this.state.settings.compressionFactor);
+        return $.ajax({
+            type: 'POST',
+            url: ROOT_URL,
+            data: data,
+            dataType: 'json',
+            processData: false,
+            contentType: false,
         })
         .done(function(data) {
             weakThis.setState({ isSummarizing: false, summarizedText: data.summary });

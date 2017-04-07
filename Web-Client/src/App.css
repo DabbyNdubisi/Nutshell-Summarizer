@@ -40,18 +40,24 @@
     padding-left: 0.5%;
 }
 
-.App-MenuAction {
+.App-MenuActions {
     position: absolute;
     left: 2%;
     top: 90%;
-    width: 20%;
-    height: 8%;
+    width: 25%;
+    height: 10%;
+}
+
+.App-Menu-Action {
+    float: left;
+    width: 45%;
+    margin-right: 2.5%;
 }
 
 .App-Settings {
-    height: 50%;
-    width: 30%;
+    height: 30%;
+    width: 20%;
     position: absolute;
     top: 25%;
-    left:35.5%;
+    left:40%;
 }

@@ -19,6 +19,10 @@ tr {
     margin: 10%
 }
 
+#compression-scale-text {
+    width: 40px;
+}
+
 button {
     width: 50%;
     height: 10%;
