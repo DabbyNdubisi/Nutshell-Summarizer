@@ -6,7 +6,14 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var cors = require('cors');
 
-var index = require('.routes/index');
+var multer = require('multer');
+var uploadHandler = multer({
+    storage: multer.diskStorage({}),
+    limits: { fileSize: 5000000 }
+});
+
+
+var index = require('./routes/index');
 var summarizer = require('./routes/summarizer');
 
 var app = express();
@@ -24,7 +31,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/api', summarizer);
+app.use('/api', uploadHandler.any(), summarizer);
 
 app.use('/', index);
 

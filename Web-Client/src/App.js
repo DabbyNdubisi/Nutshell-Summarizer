@@ -7,7 +7,7 @@ import './App.css';
 
 var utility = require('./Utility');
 var $ = require('jquery');
-var ROOT_URL = "http://localhost:3001/";
+var ROOT_URL = "http://localhost:3001/api";
 
 class App extends Component {
     constructor(props) {
